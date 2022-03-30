@@ -1,0 +1,452 @@
+#:kivy 2.0
+#:import Clock kivy.clock.Clock
+WindowManager:
+    LoginWindow:
+    LoginNoUsernameWindow:
+    LoginEmailUsernameWindow:
+    LoginEmailUsernameConfirmationWindow:
+    LoginWrongPasswordWindow:
+    LoginResetPasswordWindow:
+    LoginResetPasswordConfirmationWindow:
+    ProfileWindow:
+    ProfileCreateWindow:
+    ProfileUserNameAlreadyInUseWindow:
+
+
+<GridLayout>:
+    padding: 100
+    spacing: 30
+
+<Button>:
+
+<LoginWindow>:
+    name: "login"
+
+    GridLayout:
+        cols:1
+
+        Image:
+            source: "Logo.jpg"
+            size: self.texture_size # make images bigger
+            font_size:11
+            bold:True
+
+
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Username: "
+
+            TextInput:
+                id: usnm
+                multiline: False
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Password: "
+
+            TextInput:
+                id: passw
+                multiline: False
+                password: True
+
+        Button:
+            text: "Login"
+            on_release:
+                root.login_released(usnm, passw)
+
+
+        Button:
+            text: "Clear"
+            on_release:
+                root.manager.clear_released(usnm,passw)
+
+
+        Button:
+            text: "Create Profile"
+            on_release:
+                app.root.current = "profile_create"
+                root.manager.transition.direction = "left"
+
+<LoginNoUsernameWindow>:
+    name: "login_no_username"
+
+    GridLayout:
+        cols:1
+
+        # message
+        Label:
+            text: "Profile not found. Would you like to create a new profile? Or would like us to email your username?"
+
+        # create new profile button
+        Button:
+            text: "Create Profile"
+            on_release:
+                app.root.current = "profile_create"
+                root.manager.transition.direction = "left"
+
+        # email or forgot username button
+        Button:
+            text: "Forgot User Name"
+            on_release:
+                app.root.current = "login_email_username"
+                root.manager.transition.direction = "left"
+
+        # cancel button
+        Button:
+            text: "Cancel"
+            on_release:
+                app.root.current = "login"
+                root.manager.transition.direction = "right"
+
+<LoginEmailUsernameWindow>:
+    name: "login_email_username"
+
+    GridLayout:
+        cols:1
+
+        # message
+        Label:
+            id: message
+            text: "Enter your email to receive an email with your user name."
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Email: "
+
+            TextInput:
+                id: email
+                multiline: False
+
+        # email password reset link
+        Button:
+            id: email_button
+            text: "Email User Name"
+            on_release:
+                root.email_username(email, message, email_button, cancel_button)
+
+        # cancel button
+        Button:
+            id: cancel_button
+            text: "Cancel"
+            on_release:
+                app.root.current = "login_no_username"
+                root.manager.transition.direction = "right"
+
+<LoginEmailUsernameConfirmationWindow>:
+    name: "login_email_username_confirmation"
+
+    GridLayout:
+        cols:1
+
+        # message
+        Label:
+            id: message
+            text: "If the email you entered is in the system, please check your email for your username reminder."
+
+
+        Button:
+            id: ok_button
+            text: "Ok"
+            on_release:
+                app.root.current = "login"
+                root.manager.transition.direction = "right"
+
+<LoginWrongPasswordWindow>:
+    name: "login_wrong_password"
+
+    GridLayout:
+        cols:1
+
+        # message
+        Label:
+            text: "Wrong password. Would you like us to email you a password reset link?"
+        # email password reset link
+        Button:
+            text: "Email Reset Link"
+            on_release:
+                app.root.current = "login_email_reset_password"
+                root.manager.transition.direction = "left"
+
+        # cancel button
+        Button:
+            text: "Cancel"
+            on_release:
+                app.root.current = "login"
+                root.manager.transition.direction = "right"
+
+<LoginResetPasswordWindow>:
+    name: "login_email_reset_password"
+
+    GridLayout:
+        cols:1
+
+        # message
+        Label:
+            id: message
+            text: "Enter your email to receive an email with your password reset link."
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Email: "
+
+            TextInput:
+                id: email
+                multiline: False
+
+        # email password reset link
+        Button:
+            id: email_button
+            text: "Email Password Reset"
+            on_release:
+                root.email_password_reset(email, message, email_button, cancel_button)
+
+        # cancel button
+        Button:
+            id: cancel_button
+            text: "Cancel"
+            on_release:
+                app.root.current = "login_wrong_password"
+                root.manager.transition.direction = "right"
+
+
+
+
+<LoginResetPasswordConfirmationWindow>:
+    name: "login_reset_password_confirmation"
+
+    GridLayout:
+        cols:1
+
+        # message
+        Label:
+            id: message
+            text: "If the email you entered is in the system, please check your email for your password reset link"
+        Button:
+            id: ok_button
+            text: "Ok"
+            on_release:
+                app.root.current = "login"
+                root.manager.transition.direction = "right"
+
+
+
+<ProfileWindow>:
+    name: "profile"
+    on_enter: root.display_userdata(usnm,first_name,last_name,email,interests)
+
+    GridLayout:
+        cols:1
+        spacing: 10
+
+        Label:
+            text: "HELLO Welcome to your profile!"
+
+
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Username: "
+
+            Label:
+                id: usnm
+                text: ""
+
+
+
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "First name: "
+
+            Label:
+                id: first_name
+
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Lastname: "
+
+            Label:
+                id: last_name
+
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Email: "
+
+            Label:
+                id: email
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Interests: "
+
+            Label:
+                id: interests
+
+
+        Button:
+            text: "Log out"
+            on_release:
+                app.root.current = "login"
+                root.manager.transition.direction = "right"
+
+
+<ProfileCreateWindow>:
+    name: "profile_create"
+
+    GridLayout:
+        cols:1
+        spacing: 10
+
+        Label:
+            text: "Enter your information to create a profile! (* Required fields)"
+
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Username*: "
+
+            TextInput:
+                id: usnm
+                multiline: False
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Password*: "
+
+            TextInput:
+                id: passw
+                multiline: False
+                password: True
+
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Confirm Password*: "
+
+            TextInput:
+                id: passw2
+                multiline: False
+                password: True
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "First Name*: "
+
+            TextInput:
+                id: first_name
+                multiline: False
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Last Name*: "
+
+            TextInput:
+                id: last_name
+                multiline: False
+
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Email*: "
+
+            TextInput:
+                id: email
+                multiline: False
+
+        GridLayout:
+            cols: 2
+            padding: 0
+
+            Label:
+                text: "Interests: "
+
+            TextInput:
+                id: interests
+                multiline: True
+
+
+        Button:
+            text: "Create Profile"
+            on_release:
+                root.create_profile_released(usnm,passw,passw2,first_name,last_name,email,interests)
+
+        Button:
+            text: "Clear"
+            on_release:
+                root.manager.clear_released(usnm,passw,first_name,last_name,email,interests)
+
+
+        Button:
+            text: "Cancel"
+            on_release:
+                app.root.current = "login"
+                root.manager.transition.direction = "right"
+
+
+<ProfileUserNameAlreadyInUseWindow>:
+    name: "profile_username_already_in_use"
+    message: message
+    on_enter: root.update_message()
+
+
+    GridLayout:
+        cols:1
+
+        # message
+        Label:
+            id: message
+            text: " user name already in use. Please select another user name."
+        Button:
+            id: ok_button
+            text: "Ok"
+            on_release:
+                app.root.current = "profile_create"
+                root.manager.transition.direction = "right"
